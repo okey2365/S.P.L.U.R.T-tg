@@ -17,7 +17,7 @@ GLOBAL_DATUM_INIT(manifest, /datum/manifest, new)
 		if(readied_player.new_character)
 			log_manifest(readied_player.ckey, readied_player.new_character.mind, readied_player.new_character)
 			players_to_log[readied_player.ckey] = readied_player.new_character
-		if(ishuman(readied_player.new_character))
+			// if(ishuman(readied_player.new_character)) SPLURT EDIT - Inject works for more than carbon humans now
 			inject(readied_player.new_character, null, readied_player.client) // SKYRAT EDIT - RP Records - ORIGINAL: inject(readied_player.new_character)
 		CHECK_TICK
 	if(length(players_to_log))
@@ -133,7 +133,7 @@ GLOBAL_DATUM_INIT(manifest, /datum/manifest, new)
 		character_appearance = character_appearance,
 		dna_string = record_dna.unique_enzymes,
 		fingerprint = md5(record_dna.unique_identity),
-		gender = person_gender,
+		gender = person.gender,
 		initial_rank = assignment,
 		name = person.real_name,
 		rank = chosen_assignment, // SKYRAT EDIT - Alt job titles - ORIGINAL: rank = assignment,
@@ -143,7 +143,8 @@ GLOBAL_DATUM_INIT(manifest, /datum/manifest, new)
 		locked_dna = record_dna,
 		mind_ref = person.mind,
 		// BUBBER EDIT ADDITION BEGIN - Records
-		exploitable_information = person_client?.prefs.read_preference(/datum/preference/text/security) || "",
+		exploitable_information = person_client?.prefs.read_preference(/datum/preference/text/exploitable) || "",
+		background_information = person_client?.prefs.read_preference(/datum/preference/text/background) || "",
 		// BUBBER EDIT END
 	)
 
@@ -232,7 +233,7 @@ GLOBAL_DATUM_INIT(manifest, /datum/manifest, new)
 			if(open_slots < 1)
 				continue
 			open += open_slots
-		positions[department.department_name] = list("exceptions" = exceptions, "open" = open)
+		positions[department.department_name] = list("exceptions" = exceptions, "open" = open, "color" = department.ui_color)
 
 	return list(
 		"manifest" = get_manifest(),
